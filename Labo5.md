@@ -173,5 +173,29 @@ sudo docker exec -it ec11857fc301 redis-cli
 ```
 ### Reiniciar el contenedor Redis y entrar a la consola. ¿Es posible leer el contenido de la variable miVar? 
 *Hacemos CTRL+C para parar la ejecución de redis*
+```bash
+sudo docker run redis
+```
+*En otra terminal...*
+```bash
+sudo docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS      NAMES
+bca095a9bd7a   redis     "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   6379/tcp   pensive_mayer
 
+sudo docker exec -it bca095a9bd7a redis-cli
 
+127.0.0.1:6379> get miVar
+(nil)
+```
+*No es posible leer el contenido de la variable miVar porque al reiniciar el contenedor no se han guardado los datos*
+### Para acceder al contenedor mientras estaba en marcha habrás utilizado el comando “docker exec”. ¿Qué  diferencia hay al utilizar los siguientes parámetros?: -i, -t, -it, ninguno de ellos. 
+```bash
+-i (Interactivo)
+    Permite interactuar con la terminal
+-t (Terminal)
+    Muestra la terminal de forma legible
+-it (Interactivo y Terminal)
+    Permite interactuar con la terminal y la muestra de forma legible
+```
+
+## Imagenes Docker Propias
