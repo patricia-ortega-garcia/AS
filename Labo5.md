@@ -273,6 +273,37 @@ root@5d7ba87468b2:/# redis-cli
 - Utilizar como imagen base “alpine”.
 - Instalar el paquete “redis” con el sistema de paquetes de Alpine (Alpine no utiliza apt).
 - Ejecutar como comando de arranque “redis-server”.
+
+```bash
+mkdir lab5/miImagenAlpine
+cd lab5/miImagenAlpine
+nano Dockerfile
+```
+
+```Dockerfile
+FROM alpine:latest
+RUN apk add --update redis
+CMD redis-server
+```
 ### Utilizar los comandos de Docker para crear una imagen a partir del Dockerfile con el nombre <usuario>/<redis-alpine> donde <usuario> es el nombre elegido en la tarea anterior.
+```bash
+sudo docker build -t="portega/redis-alpine" .
+```
+<br/><br/>
 ### Lanzar un contenedor con la imagen y verificar que funciona correctamente: abrir una Shell al contenedor y utilizar la consola de Redis para añadir una variable “miVar” con valor 9.
+```bash
+sudo docker run portega/redis-alpine
+
+sudo docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED          STATUS          PORTS     NAMES
+74723a70ad59   portega/redis-alpine   "/bin/sh -c redis-se…"   43 seconds ago   Up 42 seconds             condescending_wiles
+
+sudo docker exec -it 74723a70ad59 redis-cli
+
+127.0.0.1:6379> set miVar 9
+OK
+127.0.0.1:6379> exit
+```
+<br/><br/>
 ### Parar el contenedor y comparar los tamaños de las imágenes <redis-ubuntu> y <redis-alpine>. Teniendo en cuenta que ambas cumplen el mismo propósito, ¿cuál ocupa menos?
+**
