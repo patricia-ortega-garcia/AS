@@ -78,23 +78,23 @@ sudo docker kill 4db168d7290c
 sudo docker run -it busybox
 ```
 - Mostrar el número de procesos en ejecución.
-```bash
+```
 / # ps | wc -l
 ```
 - Crear un fichero llamado miFichero dentro de /home.
-```bash
+```
 / # cd home
 /home # touch miFichero
 ```
 - Cerrar la sesión.
-```bash
+```
 /home # exit
 ```
 ### Abrir una Shell de nuevo en un contenedor busybox. ¿El fichero en /home sigue estando? ¿Por qué? 
  ```bash
 sudo docker run -it busybox
 ```
-```bash
+```
 / # cd home
 /home # ls
 ```
