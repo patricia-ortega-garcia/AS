@@ -199,3 +199,80 @@ sudo docker exec -it bca095a9bd7a redis-cli
 ```
 
 ## Imagenes Docker Propias
+### Tarea 1: Crear una imagen propia que ejecute un servidor Redis. El resultado será una imagen equivalente a la imagen oficial de Redis utilizada en la sección anterior del laboratorio, pero hecha por nosotros.
+### Crear un directorio nuevo en nuestro sistema y crear un fichero Dockerfile dentro. El Dockerfile deberá tener las siguientes instrucciones: 
+- Utilizar como imagen base “ubuntu”. 
+- Instalar el paquete “redis” con apt. 
+- Ejecutar como comando de arranque “redis-server”. 
+```bash
+mkdir lab5
+mkdir lab5/miImagenRedis
+cd lab5/miImagenRedis
+nano Dockerfile
+```
+
+```Dockerfile
+FROM ubuntu:latest
+RUN apt -qq update && apt -qq -y install redis
+CMD redis-server
+```
+### Utilizar los comandos de Docker para crear una imagen a partir del Dockerfile con el nombre  <usuario>/<redis-ubuntu> donde <usuario> es un nombre que vosotros elijáis, p.e. ulopez para Unai Lopez. 
+```bash
+sudo docker build -t="portega/redis-ubuntu" .
+```
+### En el proceso de creación de la imagen, ¿cuántos contenedores intermedios se han creado? ¿Por qué? 
+```bash
+sudo docker history portega/redis-ubuntu
+IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
+eea89e8c1093   58 seconds ago   CMD ["/bin/sh" "-c" "redis-server"]             0B        buildkit.dockerfile.v0
+<missing>      58 seconds ago   RUN /bin/sh -c apt -qq update && apt -qq -y …   51.6MB    buildkit.dockerfile.v0
+<missing>      3 weeks ago      /bin/sh -c #(nop)  CMD ["/bin/bash"]            0B        
+<missing>      3 weeks ago      /bin/sh -c #(nop) ADD file:63d5ab3ef0aab308c…   77.8MB    
+<missing>      3 weeks ago      /bin/sh -c #(nop)  LABEL org.opencontainers.…   0B        
+<missing>      3 weeks ago      /bin/sh -c #(nop)  LABEL org.opencontainers.…   0B        
+<missing>      3 weeks ago      /bin/sh -c #(nop)  ARG LAUNCHPAD_BUILD_ARCH     0B        
+<missing>      3 weeks ago      /bin/sh -c #(nop)  ARG RELEASE                  0B   
+```
+*Los contenedores intermedios son aquellos en los que la imagen pone <missing>. En total hay 7*
+<br/><br/>
+### Lanzar un contenedor con la imagen recién creada y abrir una Shell mientras esté en ejecución. Utilizar los comandos vistos en la sección anterior para crear una variable “miOtraVar” con valor 8. Salir de la consola y de la Shell.
+```bash
+sudo docker run portega/redis-ubuntu
+
+sudo docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED         STATUS         PORTS     NAMES
+5d7ba87468b2   portega/redis-ubuntu   "/bin/sh -c redis-se…"   7 seconds ago   Up 7 seconds             heuristic_robinson
+
+sudo docker exec -it 5d7ba87468b2 bin/bash
+
+root@5d7ba87468b2:/# redis-cli
+
+127.0.0.1:6379> set miOtraVar 8
+OK
+127.0.0.1:6379> exit
+root@5d7ba87468b2:/# exit
+exit
+```
+### Abrir una Shell de nuevo en el contenedor y verificar que la variable “miOtraVar” mantiene su valor.
+```bash
+sudo docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED         STATUS         PORTS     NAMES
+5d7ba87468b2   portega/redis-ubuntu   "/bin/sh -c redis-se…"   7 seconds ago   Up 7 seconds             heuristic_robinson
+
+sudo docker exec -it 5d7ba87468b2 bin/bash
+
+root@5d7ba87468b2:/# redis-cli
+
+127.0.0.1:6379> get miOtraVar
+"8"
+127.0.0.1:6379> exit
+```
+<br/><br/>
+### Tarea 2: Crear una imagen de las mismas características que la anterior, pero utilizando “alpine” como imagen base en lugar de “ubuntu”
+### Crear un directorio nuevo en el sistema y crear un fichero Dockerfile dentro. El Dockerfile deberá tener las siguientes instrucciones:
+- Utilizar como imagen base “alpine”.
+- Instalar el paquete “redis” con el sistema de paquetes de Alpine (Alpine no utiliza apt).
+- Ejecutar como comando de arranque “redis-server”.
+### Utilizar los comandos de Docker para crear una imagen a partir del Dockerfile con el nombre <usuario>/<redis-alpine> donde <usuario> es el nombre elegido en la tarea anterior.
+### Lanzar un contenedor con la imagen y verificar que funciona correctamente: abrir una Shell al contenedor y utilizar la consola de Redis para añadir una variable “miVar” con valor 9.
+### Parar el contenedor y comparar los tamaños de las imágenes <redis-ubuntu> y <redis-alpine>. Teniendo en cuenta que ambas cumplen el mismo propósito, ¿cuál ocupa menos?
