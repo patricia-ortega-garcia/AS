@@ -197,7 +197,7 @@ sudo docker exec -it bca095a9bd7a redis-cli
 -it (Interactivo y Terminal)
     Permite interactuar con la terminal y la muestra de forma legible
 ```
-
+<br/><br/>
 ## Imagenes Docker Propias
 ### Tarea 1: Crear una imagen propia que ejecute un servidor Redis. El resultado será una imagen equivalente a la imagen oficial de Redis utilizada en la sección anterior del laboratorio, pero hecha por nosotros.
 ### Crear un directorio nuevo en nuestro sistema y crear un fichero Dockerfile dentro. El Dockerfile deberá tener las siguientes instrucciones: 
