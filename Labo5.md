@@ -306,4 +306,59 @@ OK
 ```
 <br/><br/>
 ### Parar el contenedor y comparar los tamaños de las imágenes <redis-ubuntu> y <redis-alpine>. Teniendo en cuenta que ambas cumplen el mismo propósito, ¿cuál ocupa menos?
-**
+*Hacemos CTRL+C para parar la ejecución del contenedor (o sudo docker kill <CONTAINER ID>)*
+```bash
+sudo docker images
+REPOSITORY              TAG       IMAGE ID       CREATED          SIZE
+portega/redis-alpine    latest    e120146e09cf   15 minutes ago   11.8MB
+portega/redis-ubuntu    latest    eea89e8c1093   53 minutes ago   129MB
+```
+*Lo que podemos ver es que el del alpine ocupa mucho menos*
+
+<br/><br/>
+### Tarea 3: Crear una imagen propia que incluya ficheros existentes en nuestro sistema. En esta tarea se creará una imagen que tendrá un servidor web Python simple para servir un único fichero HTML
+### Crear un directorio nuevo en nuestro sistema.
+```bash
+mkdir miImagenWeb
+```
+### Dentro del nuevo directorio, crear un fichero index.html que contenga el código HTML que tenéis disponible al final de este enunciado. 
+```bash
+mkdir lab5/miImagenWeb
+cd lab5/miImagenWeb
+nano index.html
+```
+```html
+<!DOCTYPE html>
+<html>
+<head><title>Web de prueba de Docker</title></head>
+<body><h1>Hola!</h1><p>Esta es una web muy simple.</p></body>
+</html>
+```
+### Dentro del nuevo directorio, crear un fichero Dockerfile con las siguientes instrucciones:
+- Utilizar como imagen base “ubuntu”.
+- Instalar el paquete “python3”.
+- Copiar el fichero index.html dentro de la imagen, en el directorio /miWeb. Para ello hay que utilizar la instrucción COPY de los Dockerfile. Documentación sobre COPY en: https://docs.docker.com/engine/reference/builder/#copy
+- Ubicarse dentro de /miWeb como directorio de trabajo. Utilizar la instrucción WORKDIR: https://docs.docker.com/engine/reference/builder/#workdir
+- Ejecutar como comando de arranque “python3 -m http.server 1080”
+```bash
+nano Dockerfile
+```
+
+```Dockerfile
+FROM ubuntu:latest
+RUN apt -qq update && apt -qq -y install python3
+COPY index.html /var/www/html/index.html
+WORKDIR /var/www/html
+CMD python3 -m http.server 1080
+```
+<br/><br/>
+### Crear la imagen utilizando Docker con el nombre <usuario>/simple-web, donde <usuario> es un nombre que vosotros elijáis.
+```bash
+sudo docker build -t="portega/web-simple" .
+```
+### Lanzar un contenedor con la imagen recién creada. Ya que el contenedor va a servir una web, es necesario redirigir uno de los puertos del contenedor al exterior para que sea usable. Para ello, es necesario utilizar el parámetro ‘-p’ de “docker run” o de “docker start”: https://docs.docker.com/engine/reference/commandline/run/#publish     Utilizar ‘-p’ para redirigir el puerto 1080 del contenedor al puerto 80 del anfitrión.
+```bash
+sudo docker run -p 80:1080 portega/web-simple
+```
+### Abrir un navegador en el sistema en la dirección http://<IP-DE-VUESTRA-MAQUINA> y comprobar que se muestra la web. Al usar Google Cloud, para que la web se muestre, el Firewall debe permitir tráfico al puerto 80 de vuestra instancia.
+En el navegador, buscar 34.118.83.24
