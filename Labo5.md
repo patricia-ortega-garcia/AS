@@ -104,3 +104,74 @@ sudo docker run -it busybox
 ```bash
 sudo docker run redis
 ```
+### Con el contenedor en ejecución, abrir una Shell y obtener la siguiente información
+*En otra terminal*
+```bash
+sudo docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED         STATUS         PORTS      NAMES
+ec11857fc301   redis     "docker-entrypoint.s…"   7 seconds ago   Up 5 seconds   6379/tcp   angry_wright
+
+sudo docker exec -it ec11857fc301 /bin/bash
+```
+- Mostrar el contenido de la carpeta /etc. ¿Hay más o menos elementos que en la carpeta /etc de la  imagen busybox?
+ ```
+ls
+adduser.conf            gshadow        motd           rc6.d
+alternatives            gshadow-       mtab           rcS.d
+apt                     gss            netconfig      resolv.conf
+bash.bashrc             host.conf      nsswitch.conf  rmt
+bindresvport.blacklist  hostname       opt            security
+cron.d                  hosts          os-release     selinux
+cron.daily              init.d         pam.conf       shadow
+debconf.conf            issue          pam.d          shadow-
+debian_version          issue.net      passwd         shells
+default                 kernel         passwd-        skel
+deluser.conf            ld.so.cache    profile        subgid
+dpkg                    ld.so.conf     profile.d      subuid
+e2scrub.conf            ld.so.conf.d   rc0.d          systemd
+environment             libaudit.conf  rc1.d          terminfo
+fstab                   localtime      rc2.d          timezone
+gai.conf                login.defs     rc3.d          update-motd.d
+group                   logrotate.d    rc4.d          xattr.conf
+group-                  mke2fs.conf    rc5.d
+```
+- Mostrar el cuántos binarios ejecutables hay en la carpeta /bin. ¿Hay más o menos elementos que  en la carpeta /bin de busybox? 
+```
+ls /bin | wc -l
+277
+
+Hay menos elementos que en /bin de busybox
+```
+<br/><br/>
+### Con el contenedor en ejecución, ejecutar el comando “redis-cli” dentro de él para acceder a una consola de  Redis. Añadir una variable llamada miVar con valor 7. Salir de la consola Redis. 
+```bash
+sudo docker run redis
+```
+*En otra terminal...*
+```bash
+sudo docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS      NAMES
+ec11857fc301   redis     "docker-entrypoint.s…"   10 minutes ago   Up 10 minutes   6379/tcp   angry_wright
+
+sudo docker exec -it ec11857fc301 redis-cli
+
+127.0.0.1:6379> set miVar 7
+OK
+127.0.0.1:6379> exit
+```
+### Sin parar el contenedor, volver a entrar en la consola Redis. Leer el contenido de la variable miVar. 
+```bash
+sudo docker ps
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS      NAMES
+ec11857fc301   redis     "docker-entrypoint.s…"   10 minutes ago   Up 10 minutes   6379/tcp   angry_wright
+
+sudo docker exec -it ec11857fc301 redis-cli
+
+127.0.0.1:6379> get miVar
+"7"
+127.0.0.1:6379> exit
+```
+### Reiniciar el contenedor Redis y entrar a la consola. ¿Es posible leer el contenido de la variable miVar? 
+*Hacemos CTRL+C para parar la ejecución de redis*
+
+
